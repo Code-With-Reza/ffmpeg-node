@@ -1,0 +1,43 @@
+name: Publish Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write  # Needed to push to GHCR
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and tag the Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
+          TAG=${{ github.sha }}
+          echo "Building Docker image $IMAGE_NAME with tag $TAG"
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$TAG .
+
+      - name: Push the Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
+          TAG=${{ github.sha }}
+          echo "Pushing Docker image $IMAGE_NAME with tags latest and $TAG"
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$TAG
+
+      - name: Clean up local images (optional)
+        run: docker rmi -f $(docker images -q) || true

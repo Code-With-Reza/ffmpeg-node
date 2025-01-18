@@ -314,7 +314,54 @@ build_ffmpeg() {
     # --enable-version3
 
     # export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
-    ./configure %%FFMPEG_CONFIG_FLAGS%% && \
+    ./configure --disable-debug \
+        --disable-doc \
+        --disable-ffplay \
+        --enable-fontconfig \
+        --enable-gpl \
+        --enable-libaom \
+        --enable-libaribb24 \
+        --enable-libass \
+        --enable-libbluray \
+        --enable-libdav1d \
+        --enable-libfdk-aac \
+        --enable-libfontconfig \
+        --enable-libfreetype \
+        --enable-libfribidi \
+        --enable-libharfbuzz \
+        --enable-libkvazaar \
+        --enable-libmp3lame \
+        --enable-libopencore-amrnb \
+        --enable-libopencore-amrwb \
+        --enable-libopenjpeg \
+        --enable-libopus \
+        --enable-libsrt \
+        --enable-libsvtav1 \
+        --enable-libtheora \
+        --enable-libvidstab \
+        --enable-libvmaf \
+        --enable-libvorbis \
+        --enable-libvpx \
+        --enable-libwebp \
+        --enable-libx264 \
+        --enable-libx265 \
+        --enable-libxvid \
+        --enable-libzimg \
+        --enable-libzmq \
+        --enable-nonfree \
+        --enable-openssl \
+        --enable-postproc \
+        --enable-shared \
+        --enable-small \
+        --enable-version3 \
+        --extra-cflags="-I${PREFIX}/include -I/usr/include/x86_64-linux-gnu" \
+        --extra-ldflags="-L${PREFIX}/lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib" \
+        --extra-ldflags=-L/opt/ffmpeg/lib/x86_64-linux-gnu \
+        --extra-libs=-ldl \
+        --extra-libs=-lm \
+        --extra-libs=-lpthread \
+        --ld=g++ \
+        --prefix="${PREFIX}" && \
     make && \
     make install && \
     make tools/zmqsend && cp tools/zmqsend ${PREFIX}/bin/ && \

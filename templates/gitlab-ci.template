@@ -1,6 +1,0 @@
-
-${VERSION}-${VARIANT}:
-  extends: .docker
-  variables:
-    VERSION %s
-    VARIANT %s
