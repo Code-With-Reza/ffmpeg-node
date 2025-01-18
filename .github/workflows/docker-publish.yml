@@ -26,16 +26,18 @@ jobs:
 
       - name: Build and tag the Docker image
         run: |
-          REPO_NAME=${{ github.event.repository.name }}
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]')
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_NAME=ghcr.io/$OWNER/$REPO_NAME
           TAG=${{ github.sha }}
           echo "Building Docker image $IMAGE_NAME with tag $TAG"
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$TAG .
 
       - name: Push the Docker image
         run: |
-          REPO_NAME=${{ github.event.repository.name }}
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]')
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_NAME=ghcr.io/$OWNER/$REPO_NAME
           TAG=${{ github.sha }}
           echo "Pushing Docker image $IMAGE_NAME with tags latest and $TAG"
           docker push $IMAGE_NAME:latest
